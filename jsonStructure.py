@@ -1,50 +1,50 @@
 JSON_FILES = {
-    "ferma": {
+    "ferma": [{
         "qyteti": None,
-        "nr_puntoresh": None,
+        "nr_punetoresh": None,
         "nr_speciesh": None,
         "siperfaqe": None,
-    },
-    "kafshe": {
+    }],
+    "kafshe":[ {
         "emer_shkencor": None,
         "lloji": None,
         "rraca": None,
-        "mosha_mesatar": None,
+        "mosha_mesatare": None,
         "cmimi": None,
-    },
-    "gjallese": {
+    }],
+    "gjallese": [{
         "id_ferme": None,
         "sasia": None,
         "rraca": None,
-    },
-    "produkt": {
+    }],
+    "produkt": [{
         "id_ferme": None,
         "rraca": None,
         "tipi": None,
         "sasia": None,
-    },
-    "detaje_produkti": {
+    }],
+    "detaje_produkti": [{
         "id_produkti": None,
         "cmimi": None,
         "data_skadences": None,
         "shitet_me_peshe": None,
-    },
-    "klient": {
+    }],
+    "klient": [{
         "emer": None,
-        "number_kontakti": None,
+        "numer_kontakti": None,
         "balanca": None,
         "adresa": None,
-    },
-    "transaksion": {
+    }],
+    "transaksion": [{
         "id_klienti": None,
         "vlera": None,
         "data_transaksionit": None,
-    },
-    "detaje_transaksioni": {
+    }],
+    "detaje_transaksioni": [{
         "id_produkti": None,
         "id_transaksioni": None,
         "data_dergeses": None,
         "sasia": None,
         "cmimi": None,
-    }
+    }]
 }
