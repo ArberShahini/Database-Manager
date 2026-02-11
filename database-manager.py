@@ -1,7 +1,7 @@
 import json, os
 import sqlalchemy
 import tkinter as tk
-import jsonStructure
+import jsonStructure, env
 
 class Window(tk.Tk):
     scriptPath = os.path.dirname(os.path.abspath(__file__))
