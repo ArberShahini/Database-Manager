@@ -1,5 +1,0 @@
-HOST = ''
-PORT = ''
-DATABASE = ''
-USER = ''
-PASSWORD = ''
