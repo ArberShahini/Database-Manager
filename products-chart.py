@@ -17,7 +17,6 @@ ORDER BY nr_produktesh DESC;
 
 df = pd.read_sql(query, engine)
 
-# Create horizontal bar chart
 plt.figure(figsize=(10, 6))
 plt.scatter(df['qyteti'], df['nr_produktesh'], s=200, c=df['nr_produktesh'], cmap='viridis', alpha=0.7)
 plt.xlabel('Qyteti')

@@ -3,10 +3,8 @@ import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 import env
 
-# Your connection
 engine = create_engine(env.DB_URL)
 
-# Execute query
 query = """
 SELECT
     klient.emer AS emri_klientit,
@@ -19,7 +17,6 @@ ORDER BY shpenzimet_totale DESC;
 
 df = pd.read_sql(query, engine)
 
-# Create bar chart
 plt.figure(figsize=(12, 6))
 plt.bar(df['emri_klientit'], df['shpenzimet_totale'])
 plt.xlabel('Emri i Klientit')
