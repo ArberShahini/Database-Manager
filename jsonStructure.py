@@ -2,7 +2,6 @@ JSON_FILES = {
     "ferma": [{
         "qyteti": None,
         "nr_punetoresh": None,
-        "nr_speciesh": None,
         "siperfaqe": None,
     }],
     "kafshe":[ {
