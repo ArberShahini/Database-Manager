@@ -4,6 +4,7 @@ import re
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
+import requests
 
 from sqlalchemy import create_engine, text
 import env
@@ -29,10 +30,16 @@ def load_rows_from_json(path: str) -> list[dict]:
 
     if isinstance(data, list):
         rows = data
-    elif isinstance(data, dict) and isinstance(data.get("rows"), list):
-        rows = data["rows"]
+        if path.endswith("/klient.json"):
+            for row in rows:
+                response = requests.get(env.API_URL + row['shteti'])
+                country_data = response.json()
+                monedha = country_data["currencies"][0]["code"]
+                prefiks_kontakti = country_data["callingCodes"][0]
+                row["monedha"] = monedha
+                row["prefiks_kontakti"] = f"+{prefiks_kontakti}"
     else:
-        raise ValueError("JSON must be a list of objects OR an object with key 'rows' containing a list.")
+        raise ValueError("JSON must be a list of objects")
 
     if not rows:
         raise ValueError("JSON contains 0 rows.")
