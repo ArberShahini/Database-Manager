@@ -9,13 +9,7 @@ import requests
 from sqlalchemy import create_engine, text
 import env
 
-
-def safe_table_name_from_filename(path: str) -> str:
-    base = os.path.basename(path)
-    name, _ = os.path.splitext(base)
-    if not name:
-        raise ValueError("Invalid filename.")
-
+def format_table_name(name: str) -> str:
     if not re.fullmatch(r"[A-Za-z0-9_]+", name):
         raise ValueError(
             "Invalid JSON filename for table mapping. "
@@ -23,6 +17,14 @@ def safe_table_name_from_filename(path: str) -> str:
         )
     return f"dbo.[{name}]"
 
+def safe_table_name_from_filename(path: str) -> str:
+    base = os.path.basename(path)
+    name, _ = os.path.splitext(base)
+    if not name:
+        raise ValueError("Invalid filename.")
+
+    safe_table_name = format_table_name(name)
+    return safe_table_name
 
 def load_rows_from_json(path: str) -> list[dict]:
     with open(path, "r", encoding="utf-8") as f:
@@ -30,6 +32,7 @@ def load_rows_from_json(path: str) -> list[dict]:
 
     if isinstance(data, list):
         rows = data
+
         if path.endswith("/klient.json"):
             for row in rows:
                 response = requests.get(env.API_URL + row['shteti'])
@@ -71,6 +74,24 @@ def normalize_rows(rows: list[dict]) -> tuple[list[str], list[dict]]:
     normalized = [{c: r.get(c, None) for c in all_cols} for r in rows]
     return all_cols, normalized
 
+def has_valid_foreign_keys(rows: list[dict], conn, ui_class):
+    all_keys = rows[0].keys()
+    foreign_keys = []
+    for key in all_keys:
+        if key.startswith("id_"):
+            foreign_keys.append(key)
+    
+    for row in rows:
+        for key in foreign_keys:
+            parent_table = format_table_name(key.removeprefix("id_"))
+            stmt = text(f"SELECT * FROM {parent_table} WHERE id = :id")
+            fetch = conn.execute(stmt, {"id": row[key]})
+            results = fetch.fetchall()
+            if not results:
+                ui_class._set_status(f"❌ Gabim: Foreign Key \"{key}\": {row[key]}, por tabela {parent_table} nuk ka nje rresht me id = {row[key]}", error=True)
+                messagebox.showerror("Error", f"Foreign Key \"{key}\": {row[key]}, por tabela {parent_table} nuk ka nje rresht me id = {row[key]}")
+                return False
+    return True
 
 class GenericJsonImporter(tk.Tk):
     def __init__(self):
@@ -276,10 +297,13 @@ class GenericJsonImporter(tk.Tk):
             col_list_sql = ", ".join(f"[{c}]" for c in cols)
             param_list_sql = ", ".join(f":{c}" for c in cols)
             stmt = text(f"INSERT INTO {target_table} ({col_list_sql}) VALUES ({param_list_sql})")
-
+            
             self._set_status("Duke importuar…")
             with self.engine.begin() as conn:
-                conn.execute(stmt, normalized)
+                if has_valid_foreign_keys(rows, conn, self):
+                    conn.execute(stmt, normalized)
+                else:
+                    return
 
             self._set_status(f"✅ U futën {len(normalized)} rekord(e) në {target_table}.")
             messagebox.showinfo("Success", f"Inserted {len(normalized)} rows into {target_table}")

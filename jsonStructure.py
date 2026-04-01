@@ -1,5 +1,5 @@
 JSON_FILES = {
-    "ferma": [{
+    "ferme": [{
         "qyteti": None,
         "nr_punetoresh": None,
         "siperfaqe": None,
@@ -16,7 +16,7 @@ JSON_FILES = {
         "sasia": None,
         "rraca": None,
     }],
-    "produkt": [{
+    "produkti": [{
         "id_ferme": None,
         "rraca": None,
         "tipi": None,
@@ -28,13 +28,14 @@ JSON_FILES = {
         "data_skadences": None,
         "shitet_me_peshe": None,
     }],
-    "klient": [{
+    "klienti": [{
         "emer": None,
         "numer_kontakti": None,
         "balanca": None,
         "adresa": None,
+        "shteti": None,
     }],
-    "transaksion": [{
+    "transaksioni": [{
         "id_klienti": None,
         "vlera": None,
         "data_transaksionit": None,
